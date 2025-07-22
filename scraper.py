@@ -27,6 +27,9 @@ def collect_data(url: str, api_key: str) -> list[dict]:
     headers = {"Accept": "application/json", "X-Access-Token": api_key}
 
     request = get(url, headers=headers)
+    if request.status_code != 200:
+        print("Connection error")
+        return 0
     data = request.json()["features"]
     result = []
     for lib in data:
@@ -74,6 +77,7 @@ if __name__ == "__main__":
     filename = "libraries.csv"
 
     collect = collect_data(url=url, api_key=api)
-    save_to_csv(collect, filename)
+    if collect:
+        save_to_csv(collect, filename)
 
-    print(f'All available data was written in a file: "{filename}"')
+        print(f'All available data was written in a file: "{filename}"')
